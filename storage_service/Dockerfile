@@ -5,6 +5,8 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
-COPY . .
+COPY storage_service app/storage_service
+COPY config app/config
+COPY utils app/utils
 
-CMD ["python", "-m", "main"]
+CMD ["python", "-m", "storage_service.main"]
