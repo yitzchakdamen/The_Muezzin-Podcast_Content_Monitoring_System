@@ -1,9 +1,9 @@
 import logging
 from config import config
-from information_consumption_processing.management.management import Management
-from kafka_tools.kafka_tools import KafkaTools
-from data_access_layer.dal_mongodb import MongoDal
-from data_access_layer.dal_elasticsearch import ElasticSearchDal
+from storage_service.storage_service_management.management import Management
+from utils.kafka_tools.kafka_tools import KafkaTools
+from utils.data_access_layer.dal_mongodb import MongoDal
+from utils.data_access_layer.dal_elasticsearch import ElasticSearchDal
 
 
 logging.basicConfig(level=logging.INFO)
@@ -35,18 +35,16 @@ def main():
     
     dal_elasticsearch = ElasticSearchDal(elasticsearch_host=ELASTICSEARCH_HOST)
     dal_mongo = MongoDal(client_string=MONGO_CLIENT_STRING, database=MONGO_DB)
-    index_name = ELASTICSEARCH_INDEX
-    collection_name = MONGO_COLLECTION
     
     management = Management(
         dal_elasticsearch=dal_elasticsearch,
         dal_mongo= dal_mongo, 
         consumer=consumer ,
-        index_name=index_name,
-        collection_name=collection_name 
+        index_name=ELASTICSEARCH_INDEX,
+        collection_name=MONGO_COLLECTION 
         )
     management.consumer_loop()
 
 if __name__ == "__main__":
-    # python -m information_consumption_processing.main
+    # python -m storage_service.main
     main()

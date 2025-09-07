@@ -1,8 +1,8 @@
 import logging
 from config import config
-from kafka_tools.kafka_tools import KafkaTools
-from processing_metadata.management.metadata_processing import FileMetadataProcessing
-from processing_metadata.management.management import Management
+from utils.kafka_tools.kafka_tools import KafkaTools
+from processing_metadata_service.processing_metadata_management.metadata_processing import FileMetadataProcessing
+from processing_metadata_service.processing_metadata_management.management import Management
 
 
 logging.basicConfig(level=logging.DEBUG)
@@ -24,5 +24,5 @@ def main():
     management.publish_file_metadata_to_kafka(topic=KAFKA_TOPIC_FILE_METADATA)
 
 if __name__ == "__main__":
-    # python -m processing_metadata.main
+    # python -m processing_metadata_service.main
     main()

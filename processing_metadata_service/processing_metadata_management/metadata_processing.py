@@ -6,17 +6,21 @@ from typing import Generator
 class FileMetadataProcessing:
     
     def __init__(self, folder_files_path:str) -> None:
+        """ """
         self.folder = Path(folder_files_path)
 
-    def processing_files_information(self) -> Generator[dict]:
-        return iter(self.extracting_file_metadata(file) for file in self.folder.iterdir() if file.is_file())
+    def get_files_information_in_folder(self) -> Generator[dict]:
+        """ Generator for getting information about files within a folder """
+        return iter(self.extracting_all_file_metadata(file) for file in self.folder.iterdir() if file.is_file())
     
-    def extracting_file_metadata(self, file: Path) ->dict:
+    def extracting_all_file_metadata(self, file: Path) -> dict:
+        """ getting all file information """
         metadata: dict = self.file_metadata(file=file)
         metadata["statistics"] = self.file_statistics(file=file)
         return metadata
         
     def file_metadata(self, file: Path) -> dict:
+        """ extracting file metadata  """
         if not file.is_file(): raise TypeError("The Path is not a file")
         return {
             "name": file.name,
@@ -26,6 +30,7 @@ class FileMetadataProcessing:
         }
         
     def file_statistics(self, file: Path) -> dict:
+        """ extracting file statistics  """
         if not file.is_file(): raise TypeError("The Path is not a file")
         stats = file.stat()
         return {
