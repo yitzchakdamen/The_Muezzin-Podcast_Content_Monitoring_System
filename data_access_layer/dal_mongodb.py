@@ -1,4 +1,5 @@
 from pymongo import MongoClient
+from gridfs import GridFS
 from pymongo.cursor import Cursor
 from pymongo.command_cursor import CommandCursor
 from pymongo.database import Database
@@ -35,10 +36,14 @@ class MongoDal:
         cursor = self.db[collection_name].find(query, projection)
         return list(cursor) if to_list else cursor
 
-    @safe_execute(return_strategy="error")
+    # @safe_execute(return_strategy="error")
     def insert(self, documents: dict, collection_name: str) -> dict:
         result = self.db[collection_name].insert_one(documents)
         return {"acknowledged": result.acknowledged, "inserted_id": result.inserted_id}
+    
+    def insert_file(self,  collection_name: str,file_id:str, filename:str, file) -> dict:
+        fs = GridFS(database=self.db, collection=collection_name)
+        return fs.put(file, _id=file_id ,filename=filename, content_type=file)
 
     @safe_execute(return_strategy="error")
     def insert_many(self, documents: list[dict], collection_name: str) -> dict:
