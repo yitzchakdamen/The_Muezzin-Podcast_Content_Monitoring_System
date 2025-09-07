@@ -17,7 +17,7 @@ class ElasticSearchDal:
     
 
     @safe_execute()
-    def __init__(self, elasticsearch_host: str, ):
+    def __init__(self, elasticsearch_host: str):
         if ElasticSearchDal._initialized: return
         self.es:Elasticsearch = Elasticsearch(elasticsearch_host)
         self.check_connection()
@@ -34,7 +34,7 @@ class ElasticSearchDal:
         return {'mappings': {'properties': {field: {"type": field_type} for field, field_type in mapping.items()}}}
 
     @log
-    def create_index(self, index_name: str, mappings: dict):
+    def create_index(self, index_name: str, mappings: dict|None):
         if self.es.indices.exists(index=index_name):
             logger.warning(f"Index '{index_name}' already exists.")
             return False
