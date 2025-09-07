@@ -1,14 +1,15 @@
 from pathlib import Path
 from datetime import datetime
+from typing import Generator
 
 
 class FileMetadataProcessing:
     
-    def __init__(self, folder_files_path) -> None:
+    def __init__(self, folder_files_path:str) -> None:
         self.folder = Path(folder_files_path)
 
-    def processing_files_information(self) -> list[dict]:
-        return [self.extracting_file_metadata(file) for file in self.folder.iterdir() if file.is_file()]
+    def processing_files_information(self) -> Generator[dict]:
+        return iter(self.extracting_file_metadata(file) for file in self.folder.iterdir() if file.is_file())
     
     def extracting_file_metadata(self, file: Path) ->dict:
         metadata: dict = self.file_metadata(file=file)
@@ -19,9 +20,8 @@ class FileMetadataProcessing:
         if not file.is_file(): raise TypeError("The Path is not a file")
         return {
             "name": file.name,
-            "stem": file.stem,
-            "suffix": file.suffix,
-            "parent directory": str(file.parent)
+            "path": str(file.parent),
+            "metadata": { "stem": file.stem, "suffix": file.suffix}
         }
         
     def file_statistics(self, file: Path) -> dict:

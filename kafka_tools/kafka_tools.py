@@ -33,6 +33,7 @@ class KafkaTools:
         def publish_message(self, topic:str, message:Any, key=None):
             """Publish a message to a Kafka topic."""
             self.producer.send(topic, key=key, value=message)
+            self.producer.flush()
         
         @safe_execute(return_strategy="error")
         def publish_many_by_topics(self, topics:dict[str,Any]):

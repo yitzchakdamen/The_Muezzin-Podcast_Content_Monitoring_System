@@ -8,16 +8,16 @@ logger = logging.getLogger(__name__)
 
 
 PODCAST_FILES_PATH = os.getenv("PODCAST_FILES_PATH", r"data\podcasts")
-
-
-ELASTICSEARCH_HOST = os.getenv("ELASTICSEARCH_HOST", "http://localhost:9200")
 BOOTSTRAP_SERVERS = os.getenv("BOOTSTRAP_SERVERS", "localhost:9092")
+KAFKA_TOPIC_FILE_METADATA = os.getenv("KAFKA_TOPIC_FILE_METADATA", "file-metadata")
 
 
 
 
 
-logger.info(f"""
+logger.debug(f"""
             Configuration Loaded ___ :
-            ELASTICSEARCH_HOST: {ELASTICSEARCH_HOST}
+            PODCAST_FILES_PATH:( {PODCAST_FILES_PATH})
+            BOOTSTRAP_SERVERS: ({BOOTSTRAP_SERVERS})
+            KAFKA_TOPIC_FILE_METADATA: ({KAFKA_TOPIC_FILE_METADATA})
             """)
