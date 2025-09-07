@@ -67,7 +67,8 @@ services:
       APP_ENV:  production
       BOOTSTRAP_SERVERS: kafka-broker:9092
       MONGO_URI: mongodb://mongodb:27017
-    depends_on:
+    depends_on: 
       - elasticsearch
       - kafka
       - mongodb
+      
