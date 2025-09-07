@@ -3,7 +3,7 @@ import json
 import logging
 from typing import Any
 import datetime
-from utils.decorators import safe_execute, log
+from utils.decorators import safe_execute, log_func
 
 logger = logging.getLogger(__name__)
 

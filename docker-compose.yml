@@ -57,17 +57,17 @@ services:
     ports:
       - "27017:27017"
 
-  app:
+  storage_service:
     build: 
       context: .
-      dockerfile: Dockerfile
-    image: app-image
-    container_name: app-container
+      dockerfile: storage_service/Dockerfile
+    image: storage_service-image
+    container_name: storage_service-container
     environment:
       APP_ENV:  production
       BOOTSTRAP_SERVERS: kafka-broker:9092
       MONGO_URI: mongodb://mongodb:27017
-    ports:
-      - "8000:8000"
     depends_on:
       - elasticsearch
+      - kafka
+      - mongodb
