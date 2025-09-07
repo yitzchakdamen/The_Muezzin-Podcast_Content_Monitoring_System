@@ -6,7 +6,8 @@ from functools import wraps
 logger = logging.getLogger(__name__)
 
 
-def log(func):
+def log_func(func):
+    """decorator log for function"""
     def wrapper(*args, **kwargs):
         logger.debug(f" Running .... ({func.__name__}) with args={args}, kwargs={kwargs}")
         result = func(*args, **kwargs)

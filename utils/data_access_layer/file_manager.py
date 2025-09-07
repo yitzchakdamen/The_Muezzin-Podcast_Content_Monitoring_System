@@ -1,4 +1,4 @@
-from utils.decorators import safe_execute, log
+from utils.decorators import safe_execute, log_func
 import csv
 
 class FileManager:

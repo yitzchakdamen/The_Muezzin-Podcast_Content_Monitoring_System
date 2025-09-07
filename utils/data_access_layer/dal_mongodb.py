@@ -3,7 +3,7 @@ from gridfs import GridFS
 from pymongo.cursor import Cursor
 from pymongo.command_cursor import CommandCursor
 from pymongo.database import Database
-from utils.decorators import safe_execute, log
+from utils.decorators import safe_execute, log_func
 import logging
 
 logger = logging.getLogger(__name__)
@@ -26,7 +26,7 @@ class MongoDal:
         self.set_database(database)
         MongoDal._initialized = True
 
-    @log
+    @log_func
     def set_database(self, database: str):
         self.db: Database = self.client[database]
 
