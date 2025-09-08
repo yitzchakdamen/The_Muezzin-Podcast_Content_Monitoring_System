@@ -64,6 +64,7 @@ services:
     image: storage_service-image
     container_name: storage_service-container
     environment:
+      LOGGER_NAME: storage_service
       PODCAST_FILES_PATH: data/podcasts
       BOOTSTRAP_SERVERS: kafka-broker:9092
       KAFKA_TOPIC_FILE_METADATA: file-metadata
@@ -86,6 +87,7 @@ services:
     image: processing_metadata_service-image
     container_name: processing_metadata_service-container
     environment:
+      LOGGER_NAME: processing_metadata_service
       PODCAST_FILES_PATH: data/podcasts
       BOOTSTRAP_SERVERS: kafka-broker:9092
       KAFKA_TOPIC_FILE_METADATA: file-metadata

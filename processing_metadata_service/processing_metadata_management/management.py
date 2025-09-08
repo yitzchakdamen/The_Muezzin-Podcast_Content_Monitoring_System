@@ -1,5 +1,10 @@
 from utils.kafka_tools.kafka_tools import KafkaTools
 from processing_metadata_service.processing_metadata_management.metadata_processing import FileMetadataProcessing
+import logging
+from config.config import LOGGER_NAME
+
+
+logger = logging.getLogger(LOGGER_NAME)
 
 class Management:
     

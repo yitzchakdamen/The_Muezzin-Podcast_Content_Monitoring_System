@@ -1,10 +1,14 @@
-from config import config, logger_config
+from config import config
+from config.logger_config import LoggerConfig
 import logging
 from storage_service.storage_service_management.management import Management
 from utils.kafka_tools.kafka_tools import KafkaTools
 from utils.data_access_layer.dal_mongodb import MongoDal
 from utils.data_access_layer.dal_elasticsearch import ElasticSearchDal
+from config.config import LOGGER_NAME
 
+
+logger = logging.getLogger(LOGGER_NAME)
 
 BOOTSTRAP_SERVERS = config.BOOTSTRAP_SERVERS
 KAFKA_TOPIC_FILE_METADATA = config.KAFKA_TOPIC_FILE_METADATA
@@ -13,19 +17,17 @@ KAFKA_GROUP_ID_FILE_METADATA = config.KAFKA_GROUP_ID_FILE_METADATA
 ELASTICSEARCH_HOST = config.ELASTICSEARCH_HOST
 ELASTICSEARCH_INDEX = config.ELASTICSEARCH_INDEX
 ELASTICSEARCH_MAPPING = config.ELASTICSEARCH_MAPPING
+ELASTICSEARCH_INDEX_LOG = config.ELASTICSEARCH_INDEX_LOG
 
 MONGO_CLIENT_STRING = config.MONGO_CLIENT_STRING
 MONGO_DB = config.MONGO_DB
 MONGO_COLLECTION = config.MONGO_COLLECTION
 
-
-logging.basicConfig(level=logging.INFO)
-logging.getLogger('kafka').setLevel(logging.WARNING)
-logger = logging.getLogger(__name__)
-logger_config.LoggerConfig.config_ESHandler(logger=logger, es_host=ELASTICSEARCH_HOST, index="lodin", log_name="loog")
-
-
 def main():
+    
+    logging.basicConfig(level=logging.INFO, handlers=LoggerConfig.config_ESHandler(es_host=ELASTICSEARCH_HOST, index=ELASTICSEARCH_INDEX_LOG))
+    logging.getLogger('kafka').setLevel(logging.WARNING)
+    
     logger.info(" ____ Starting the application ____ ")
     
     consumer = KafkaTools.Consumer.get_consumer(

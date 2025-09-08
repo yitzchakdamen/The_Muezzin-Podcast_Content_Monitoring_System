@@ -2,7 +2,11 @@ from pathlib import Path
 from datetime import datetime
 from typing import Generator
 from utils.decorators import log_func, safe_execute
+import logging
+from config.config import LOGGER_NAME
 
+
+logger = logging.getLogger(LOGGER_NAME)
 
 class FileMetadataProcessing:
     

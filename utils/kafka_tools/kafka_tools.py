@@ -4,8 +4,10 @@ import logging
 from typing import Any
 import datetime
 from utils.decorators import safe_execute, log_func
+from config.config import LOGGER_NAME
 
-logger = logging.getLogger(__name__)
+
+logger = logging.getLogger(LOGGER_NAME)
 
 class KafkaTools:
     
