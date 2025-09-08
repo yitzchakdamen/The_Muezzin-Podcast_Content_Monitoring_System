@@ -1,5 +1,9 @@
 from utils.decorators import safe_execute, log_func
-import csv
+import csv, logging
+from config.config import LOGGER_NAME
+
+
+logger = logging.getLogger(LOGGER_NAME)
 
 class FileManager:
     

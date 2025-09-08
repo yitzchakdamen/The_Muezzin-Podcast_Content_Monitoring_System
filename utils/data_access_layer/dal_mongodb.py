@@ -5,8 +5,10 @@ from pymongo.command_cursor import CommandCursor
 from pymongo.database import Database
 from utils.decorators import safe_execute, log_func
 import logging
+from config.config import LOGGER_NAME
 
-logger = logging.getLogger(__name__)
+
+logger = logging.getLogger(LOGGER_NAME)
 
 class MongoDal:
     

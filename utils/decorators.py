@@ -3,7 +3,7 @@ from functools import wraps
 
 
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger()
 
 
 def log_func(func):

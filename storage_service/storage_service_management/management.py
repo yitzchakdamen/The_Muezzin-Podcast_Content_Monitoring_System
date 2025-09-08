@@ -4,8 +4,10 @@ from utils.data_access_layer.file_manager import FileManager
 from utils.data_access_layer.dal_mongodb import MongoDal
 import json, hashlib, logging
 from utils.decorators import log_func, safe_execute
+from config.config import LOGGER_NAME
 
-logger = logging.getLogger(__name__)
+
+logger = logging.getLogger(LOGGER_NAME)
 
 class Management:
     

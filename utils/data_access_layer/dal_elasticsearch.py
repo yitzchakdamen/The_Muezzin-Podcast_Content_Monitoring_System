@@ -1,8 +1,10 @@
 from elasticsearch import Elasticsearch, helpers
 import logging
 from utils.decorators import safe_execute, log_func
+from config.config import LOGGER_NAME
 
-logger = logging.getLogger(__name__)
+
+logger = logging.getLogger(LOGGER_NAME)
 
 class ElasticSearchDal:
     
