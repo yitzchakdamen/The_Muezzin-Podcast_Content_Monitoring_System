@@ -8,9 +8,9 @@ services:
       KAFKA_NODE_ID: 1 
       KAFKA_PROCESS_ROLES: broker,controller 
       KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093 
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092 #localhost:9092 
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-broker:9092 #localhost:9092 
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER 
-      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@localhost:9093  #localhost:9092 
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka-broker:9093  #localhost:9092 
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1 
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1 
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1 
@@ -64,11 +64,39 @@ services:
     image: storage_service-image
     container_name: storage_service-container
     environment:
-      APP_ENV:  production
+      PODCAST_FILES_PATH: data/podcasts
       BOOTSTRAP_SERVERS: kafka-broker:9092
-      MONGO_URI: mongodb://mongodb:27017
+      KAFKA_TOPIC_FILE_METADATA: file-metadata
+      KAFKA_GROUP_ID_FILE_METADATA: information_consumption_processing
+      ELASTICSEARCH_HOST: http://elasticsearch:9200
+      ELASTICSEARCH_INDEX: audio_files-metadata
+      MONGO_CLIENT_STRING: mongodb://mongodb:27017
+      MONGO_DB: podcast_files
+      MONGO_COLLECTION: audio_files
     depends_on: 
       - elasticsearch
       - kafka
       - mongodb
-      
+
+  processing_metadata_service:
+    build: 
+      context: .
+      dockerfile: processing_metadata_service/Dockerfile
+    image: processing_metadata_service-image
+    container_name: processing_metadata_service-container
+    environment:
+      PODCAST_FILES_PATH: data/podcasts
+      BOOTSTRAP_SERVERS: kafka-broker:9092
+      KAFKA_TOPIC_FILE_METADATA: file-metadata
+      KAFKA_GROUP_ID_FILE_METADATA: information_consumption_processing
+      ELASTICSEARCH_HOST: http://elasticsearch:9200
+      ELASTICSEARCH_INDEX: audio_files-metadata
+      MONGO_CLIENT_STRING: mongodb://mongodb:27017
+      MONGO_DB: podcast_files
+      MONGO_COLLECTION: audio_files
+    depends_on: 
+      - elasticsearch
+      - kafka
+      - mongodb
+
+
