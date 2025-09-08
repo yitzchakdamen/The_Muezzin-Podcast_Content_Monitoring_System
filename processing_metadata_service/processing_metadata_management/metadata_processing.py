@@ -31,7 +31,8 @@ class FileMetadataProcessing:
             "name": file.name,
             "relative_path": str(file.parent),
             "absolute_path":file.resolve(),
-            "metadata": { "stem": file.stem, "suffix": file.suffix}
+            "stem": file.stem, 
+            "suffix": file.suffix
         }
     
     @log_func
