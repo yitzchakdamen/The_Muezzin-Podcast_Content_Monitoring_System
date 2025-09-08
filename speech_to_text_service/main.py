@@ -1,7 +1,7 @@
 from config import config
 from config.logger_config import LoggerConfig
 import logging
-from storage_service.storage_service_management.management import Management
+from speech_to_text_service.stt_management.management import Management
 from utils.kafka_tools.kafka_tools import KafkaTools
 from utils.data_access_layer.dal_mongodb import MongoDal
 from utils.data_access_layer.dal_elasticsearch import ElasticSearchDal
@@ -11,12 +11,11 @@ from config.config import LOGGER_NAME
 logger = logging.getLogger(LOGGER_NAME)
 
 BOOTSTRAP_SERVERS = config.BOOTSTRAP_SERVERS
-KAFKA_TOPIC_FILE_METADATA = config.KAFKA_TOPIC_FILE_METADATA
-KAFKA_GROUP_ID_FILE_METADATA = config.KAFKA_GROUP_ID_FILE_METADATA
 KAFKA_TOPIC_INCOME_PROCESSING = config.KAFKA_TOPIC_INCOME_PROCESSING
+KAFKA_GROUP_ID_INCOME_PROCESSING = config.KAFKA_GROUP_ID_INCOME_PROCESSING
 
 ELASTICSEARCH_HOST = config.ELASTICSEARCH_HOST
-ELASTICSEARCH_INDEX = config.ELASTICSEARCH_INDEX
+ELASTICSEARCH_INDEX_TRANSCRIPTTION = config.ELASTICSEARCH_INDEX_TRANSCRIPTTION
 ELASTICSEARCH_MAPPING = config.ELASTICSEARCH_MAPPING
 ELASTICSEARCH_INDEX_LOG = config.ELASTICSEARCH_INDEX_LOG
 
@@ -32,11 +31,9 @@ def main():
     logger.info(" ____ Starting the application ____ ")
     
     consumer = KafkaTools.Consumer.get_consumer(
-        KAFKA_TOPIC_FILE_METADATA, 
+        KAFKA_TOPIC_INCOME_PROCESSING, 
         bootstrap_servers=BOOTSTRAP_SERVERS, 
-        group_id=KAFKA_GROUP_ID_FILE_METADATA)
-    
-    poducer = KafkaTools.Producer(bootstrap_servers=BOOTSTRAP_SERVERS)
+        group_id=KAFKA_GROUP_ID_INCOME_PROCESSING)
     
     dal_elasticsearch = ElasticSearchDal(elasticsearch_host=ELASTICSEARCH_HOST)
     dal_mongo = MongoDal(client_string=MONGO_CLIENT_STRING, database=MONGO_DB)
@@ -45,12 +42,10 @@ def main():
         dal_elasticsearch=dal_elasticsearch,
         dal_mongo= dal_mongo, 
         consumer=consumer ,
-        producer= poducer,
-        index_name=ELASTICSEARCH_INDEX,
+        index_name=ELASTICSEARCH_INDEX_TRANSCRIPTTION,
         collection_name=MONGO_COLLECTION,
-        elasticsearch_mapping=ELASTICSEARCH_MAPPING
         )
-    management.consumer_loop(topic=KAFKA_TOPIC_INCOME_PROCESSING)
+    management.consumer_loop()
 
 if __name__ == "__main__":
     # python -m storage_service.main
