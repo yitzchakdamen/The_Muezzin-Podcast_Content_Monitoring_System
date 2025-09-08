@@ -31,7 +31,7 @@ def safe_execute(return_strategy="none"):
             try:
                 logger.debug(f"Running .... ({func.__name__}) with args={args}, kwargs={kwargs}")
                 result = func(*args, **kwargs)
-                logger.debug(f"Function finished ({func.__name__}) returned: {result}")
+                logger.debug(f"Function finished ({func.__name__}) returned: {result}\n")
                 return result 
             
             except Exception as e:
