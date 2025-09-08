@@ -1,14 +1,9 @@
+from config import config, logger_config
 import logging
-from config import config
 from storage_service.storage_service_management.management import Management
 from utils.kafka_tools.kafka_tools import KafkaTools
 from utils.data_access_layer.dal_mongodb import MongoDal
 from utils.data_access_layer.dal_elasticsearch import ElasticSearchDal
-
-
-logging.basicConfig(level=logging.INFO)
-logging.getLogger('kafka').setLevel(logging.WARNING)
-logger = logging.getLogger(__name__)
 
 
 BOOTSTRAP_SERVERS = config.BOOTSTRAP_SERVERS
@@ -24,6 +19,10 @@ MONGO_DB = config.MONGO_DB
 MONGO_COLLECTION = config.MONGO_COLLECTION
 
 
+logging.basicConfig(level=logging.INFO)
+logging.getLogger('kafka').setLevel(logging.WARNING)
+logger = logging.getLogger(__name__)
+logger_config.LoggerConfig.config_ESHandler(logger=logger, es_host=ELASTICSEARCH_HOST, index="lodin", log_name="loog")
 
 
 def main():
