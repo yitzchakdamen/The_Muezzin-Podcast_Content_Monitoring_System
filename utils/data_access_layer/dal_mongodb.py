@@ -55,7 +55,6 @@ class MongoDal:
     def find_file(self, collection_name: str, field_name:str, find) -> GridOut | None:
         fs = GridFS(database=self.db, collection=collection_name)
         return fs.find_one({field_name:find})
-        
 
     @safe_execute(return_strategy="error")
     def insert_many(self, documents: list[dict], collection_name: str) -> dict:
