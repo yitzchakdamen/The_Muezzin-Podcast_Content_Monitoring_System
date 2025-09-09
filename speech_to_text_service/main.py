@@ -2,6 +2,7 @@ from config import config
 from config.logger_config import LoggerConfig
 import logging
 from speech_to_text_service.stt_management.management import Management
+from speech_to_text_service.stt_management.text_analysis import TextAnalysis
 from utils.kafka_tools.kafka_tools import KafkaTools
 from utils.data_access_layer.dal_mongodb import MongoDal
 from utils.data_access_layer.dal_elasticsearch import ElasticSearchDal
@@ -23,6 +24,8 @@ ELASTICSEARCH_INDEX_LOG = config.ELASTICSEARCH_INDEX_LOG
 MONGO_CLIENT_STRING = config.MONGO_CLIENT_STRING
 MONGO_DB = config.MONGO_DB
 MONGO_COLLECTION = config.MONGO_COLLECTION
+HOSTILE_TEXT = config.HOSTILE_TEXT
+LESS_HOSTILE_TEXT = config.LESS_HOSTILE_TEXT
 
 def main():
     
@@ -44,9 +47,15 @@ def main():
         consumer=consumer ,
         index_name=ELASTICSEARCH_INDEX_TRANSCRIPTTION,
         collection_name=MONGO_COLLECTION,
+        text_analysis = TextAnalysis(hostile_text=HOSTILE_TEXT, less_hostile_text=LESS_HOSTILE_TEXT)
         )
     management.consumer_loop()
+    
+    
 
 if __name__ == "__main__":
     # python -m speech_to_text_service.main
     main()
+    
+    
+    

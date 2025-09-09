@@ -1,5 +1,6 @@
 from utils.kafka_tools.kafka_tools import KafkaTools, KafkaConsumer
 from utils.data_access_layer.dal_elasticsearch import ElasticSearchDal
+from speech_to_text_service.stt_management.text_analysis import TextAnalysis
 from utils.data_access_layer.file_manager import FileManager
 from utils.data_access_layer.dal_mongodb import MongoDal
 import json, hashlib, logging, io
@@ -19,6 +20,7 @@ class Management:
                 consumer: KafkaConsumer ,
                 index_name:str,
                 collection_name:str,
+                text_analysis:TextAnalysis
                 ) -> None:
         """ Initializing the class with the required fields - the DAL for the databases - Kafka Consumer"""
         self.consumer = consumer
@@ -27,6 +29,7 @@ class Management:
         self.index_name = index_name
         self.collection_name = collection_name
         self.dal_elasticsearch.create_index(index_name=self.index_name ,mappings=None)
+        self.text_analysis = text_analysis
         self.model = WhisperModel("base", device="cpu")
         
     @log_func 
@@ -41,7 +44,8 @@ class Management:
         file_id = message["file_id"]
         bytes_file = self.retrieve_from_mongo(file_id)
         transcribe = self.transcription(io.BytesIO(bytes_file))
-        self.dal_elasticsearch.index_document(index_name=self.index_name, document= {"file_id":file_id, "transcribe":transcribe})
+        analysis = self.text_analysis.snalysis_process(transcribe)
+        self.dal_elasticsearch.index_document(index_name=self.index_name, document= {"file_id":file_id, "transcribe":transcribe} | analysis)
         logging.info(f"file with id: {file_id} transcribed and indexed into elasticsearch")
 
     def retrieve_from_mongo(self, file_id) -> bytes:
@@ -57,8 +61,3 @@ class Management:
 
     
     
-
-
-
-
-
