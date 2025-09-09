@@ -33,7 +33,7 @@ class Management:
     def consumer_loop(self) -> None:
         """ Listening on Kafka and running processing on each message"""
         for message in self.consumer:
-            logger.debug(f"message from Kafka: {message}")
+            logger.info(f"message from Kafka: {message}")
             self.message_reception_processing(message.value)
     
     @safe_execute()
@@ -45,6 +45,8 @@ class Management:
         logging.info(f"file with id: {file_id} transcribed and indexed into elasticsearch")
 
     def retrieve_from_mongo(self, file_id) -> bytes:
+        logger.info(f"retrieve file from mongo {file_id}")
+        
         find = self.dal_mongo.find_file(collection_name=self.collection_name, field_name="file_id", find=file_id)
         if find: return self.dal_mongo.get_file(collection_name=self.collection_name, id=find._id).read()
         else: raise ValueError("file not find")

@@ -33,7 +33,7 @@ class Management:
     def consumer_loop(self, topic:str) -> None:
         """ Listening on Kafka and running processing on each message"""
         for message in self.consumer:
-            logger.debug(f"message from Kafka: {message}")
+            logger.info(f"message from Kafka: {message}")
             self.processing(message.value, topic)
             
             

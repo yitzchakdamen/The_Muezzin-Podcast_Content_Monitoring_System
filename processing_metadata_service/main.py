@@ -6,7 +6,8 @@ from processing_metadata_service.processing_metadata_management.management impor
 from config.logger_config import LoggerConfig
 from config.config import LOGGER_NAME
 
-
+logging.getLogger('kafka').setLevel(logging.WARNING)
+logging.getLogger('elastic_transport.transport').setLevel(logging.WARNING)
 logger = logging.getLogger(LOGGER_NAME)
 
 PODCAST_FILES_PATH = config.PODCAST_FILES_PATH
@@ -17,15 +18,17 @@ ELASTICSEARCH_INDEX_LOG = config.ELASTICSEARCH_INDEX_LOG
 
 
 def main():
-    logger.info(" ____ Starting the application ____ ")
+    
     logging.basicConfig(level=logging.INFO, handlers=LoggerConfig.config_ESHandler(es_host=ELASTICSEARCH_HOST, index=ELASTICSEARCH_INDEX_LOG))
-    logging.getLogger('kafka').setLevel(logging.WARNING)
+    logger.info(" ____ Starting the application ____ ")
     
     file_metadata_processing = FileMetadataProcessing(PODCAST_FILES_PATH)
     poducer = KafkaTools.Producer(bootstrap_servers=BOOTSTRAP_SERVERS)
     
     management = Management(file_metadata_processing=file_metadata_processing, poducer=poducer)
     management.publish_file_metadata_to_kafka(topic=KAFKA_TOPIC_FILE_METADATA)
+    
+    logger.info(" ____ End the application ____ ")
 
 if __name__ == "__main__":
     # python -m processing_metadata_service.main

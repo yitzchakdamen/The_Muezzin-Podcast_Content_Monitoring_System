@@ -18,7 +18,6 @@ class ElasticSearchDal:
         return cls._instance
     
 
-    @safe_execute()
     def __init__(self, elasticsearch_host: str):
         if ElasticSearchDal._initialized: return
         self.es:Elasticsearch = Elasticsearch(elasticsearch_host)
@@ -47,10 +46,6 @@ class ElasticSearchDal:
 
     @log_func
     def index_document(self, index_name: str, document: dict, id=None):
-        if not self.es.indices.exists(index=index_name):
-            logger.warning(f"Index '{index_name}' does not exist.")
-            return False
-        
         check = self.es.index(index=index_name, document=document, id=id)
         logger.info(f"Document indexed in '{check.body['_index']}'  id: {check.body['_id']}, -> {check.body['result']}")
         return check
@@ -65,10 +60,6 @@ class ElasticSearchDal:
 
     @log_func
     def update_document(self, index_name:str, document:dict, id=None, query=None):
-        if not self.es.indices.exists(index=index_name):
-            logger.warning(f"Index '{index_name}' does not exist.")
-            return False
-        
         if query: return self.es.update_by_query(index=index_name, body={"query": query})
         elif id is not None: return self.es.update(index=index_name,id=id,doc=document)
 
