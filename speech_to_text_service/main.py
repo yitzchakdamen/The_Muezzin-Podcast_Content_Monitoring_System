@@ -48,5 +48,5 @@ def main():
     management.consumer_loop()
 
 if __name__ == "__main__":
-    # python -m storage_service.main
+    # python -m speech_to_text_service.main
     main()
