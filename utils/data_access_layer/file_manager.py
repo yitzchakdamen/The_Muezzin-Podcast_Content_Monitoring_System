@@ -24,7 +24,7 @@ class FileManager:
             return file.read()
         
     @staticmethod
-    def uploading_binary_file(file_url: str) :
+    def uploading_binary_file(file_url: str) -> bytes:
         with open(file=file_url, mode='rb') as file:
             return file.read()
 

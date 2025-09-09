@@ -29,10 +29,6 @@ class ElasticSearchDal:
         logger.info("Elasticsearch cluster is up!" if self.es.ping() else "Elasticsearch cluster is down!")
         logger.info(f"Elasticsearch version: {self.es.info()}")
         return self.es.ping()
-        
-
-    def build_mappings(self, mapping:dict[str,str]) -> dict:
-        return {'mappings': {'properties': {field: {"type": field_type} for field, field_type in mapping.items()}}}
 
     @log_func
     def create_index(self, index_name: str, mappings: dict|None):

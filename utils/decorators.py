@@ -9,9 +9,9 @@ logger = logging.getLogger(LOGGER_NAME)
 def log_func(func):
     """decorator log for function"""
     def wrapper(*args, **kwargs):
-        logger.info(f" Running .... ({func.__name__}) with args={args}, kwargs={kwargs}")
+        logger.info(f" Running .... ({func.__name__} ) with args: ({args}), kwargs: ({kwargs})")
         result = func(*args, **kwargs)
-        logger.info(f" Function!!! ({func.__name__}) returned: {result}\n")
+        logger.info(f" Function finished ({func.__name__}) returned: {result}\n")
         return result 
     return wrapper
 

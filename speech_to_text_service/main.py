@@ -46,7 +46,12 @@ def main():
         collection_name=MONGO_COLLECTION,
         )
     management.consumer_loop()
+    
+    
 
 if __name__ == "__main__":
     # python -m speech_to_text_service.main
     main()
+    
+    
+    

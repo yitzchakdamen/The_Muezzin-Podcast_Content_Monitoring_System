@@ -1,3 +1,4 @@
+from elastic_transport import ObjectApiResponse
 from utils.kafka_tools.kafka_tools import KafkaTools, KafkaConsumer, KafkaProducer
 from utils.data_access_layer.dal_elasticsearch import ElasticSearchDal
 from utils.data_access_layer.file_manager import FileManager
@@ -35,29 +36,22 @@ class Management:
         for message in self.consumer:
             logger.info(f"message from Kafka: {message}")
             self.processing(message.value, topic)
-            
-            
-    
-    @safe_execute(return_strategy="None")
-    def path_processing(self, message):
-        message.pop("relative_path", None)
-        return message.pop("absolute_path", None)
     
     @log_func
     def processing(self, message, topic:str) -> None:
         """ 
         Processing on message:
             Create a unique ID
-            Insert metadata and file into databases - Mongo and Elastic
+            Insert metadata and file into databases - Mongo and Elastic And publish in Kafka
         """
         has_identifier = self.create_unique_hash_identifier(message)
-        path = self.path_processing(message)
-        file = FileManager.uploading_content(path)
+        path: str = self.path_processing(message)
+        file: bytes = FileManager.uploading_content(path) # type: ignore
         
         index_metadata = self.index_metadata_into_elasticsearch(file_id=has_identifier, data=message)
         insert_file_into_mongo = self.insert_file_into_mongo(file_id=has_identifier, file=file)
-
-        self.producer.publish_message(message={"file_id":has_identifier, "info":"inserted to mongo"},topic=topic)
+        
+        if insert_file_into_mongo: self.producer.publish_message(message={"file_id":has_identifier, "info":"file inserted into mongo"},topic=topic)
 
     @log_func
     def create_unique_hash_identifier(self, message:dict) -> str:
@@ -67,13 +61,23 @@ class Management:
         sha256_hash.update(message_bytes)
         return sha256_hash.hexdigest()
     
+    @safe_execute(return_strategy="None")
+    def path_processing(self, message: dict, absolute_path: bool=False) -> str:
+        """ Extract the path to the file from a message - Relative or absolute """
+        if not absolute_path:
+            message.pop("relative_path", None)
+            return message.pop("absolute_path", None)
+        else:
+            message.pop("absolute_path", None)
+            return message.pop("relative_path", None)
+            
     @log_func
-    def index_metadata_into_elasticsearch(self, file_id:str ,data:dict):
+    def index_metadata_into_elasticsearch(self, file_id:str ,data:dict) -> ObjectApiResponse:
         """Attach the id and insert the metadata into elasticsearch """
         data["file_id"] = file_id
         return self.dal_elasticsearch.index_document(document=data, index_name=self.index_name)
     
     @log_func
-    def insert_file_into_mongo(self, file_id:str, file):
+    def insert_file_into_mongo(self, file_id:str, file) -> dict:
         """Attach the id and insert the file - binary into elasticsearch """
         return self.dal_mongo.insert_file(collection_name=self.collection_name, file_id=file_id, file=file)
