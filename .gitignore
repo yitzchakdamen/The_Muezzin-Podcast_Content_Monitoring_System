@@ -27,6 +27,3 @@ __pycache__/
 
 .venv
 temp_files/-
-
-/.text_analysis.py
-.text_analysis.py

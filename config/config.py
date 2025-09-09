@@ -26,7 +26,8 @@ MONGO_CLIENT_STRING = os.getenv("MONGO_CLIENT_STRING", "mongodb://localhost:2701
 MONGO_DB = os.getenv("MONGO_DB", "podcast_files")
 MONGO_COLLECTION = os.getenv("MONGO_COLLECTION", "audio_files")
 
-
+HOSTILE_TEXT =  os.getenv("HOSTILE_TEXT", "RnJlZWRvbSBGbG90aWxsYSxSZXNpc3RhbmNlLExpYmVyYXRpb24sRnJlZSBQYWxlc3RpbmUsR2F6YSxDZWFzZWZpcmUsUHJvdGVzdCxVTlJXQQ==")
+LESS_HOSTILE_TEXT =  os.getenv("LESS_HOSTILE_TEXT", "R2Vub2NpZGUsV2FyIENyaW1lcyxBcGFydGhlaWQsTWFzc2FjcmUsTmFrYmEsRGlzcGxhY2VtZW50LEh1bWFuaXRhcmlhbiBDcmlzaXMsQmxvY2thZGUsT2NjdXBhdGlvbixSZWZ1Z2VlcyxJQ0MsQkRT")
 
 
 
