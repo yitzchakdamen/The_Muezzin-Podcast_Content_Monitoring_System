@@ -104,3 +104,27 @@ services:
       - mongodb
 
 
+  speech_to_text_service:
+    build: 
+      context: .
+      dockerfile: speech_to_text_service/Dockerfile
+    image: speech_to_text_service-image
+    container_name: speech_to_text_service-container
+    environment:
+      LOGGER_NAME: speech_to_text_service
+      PODCAST_FILES_PATH: data/podcasts
+      BOOTSTRAP_SERVERS: kafka-broker:9092
+      KAFKA_TOPIC_FILE_METADATA: file-metadata
+      KAFKA_GROUP_ID_FILE_METADATA: information_consumption_processing
+      ELASTICSEARCH_HOST: http://elasticsearch:9200
+      ELASTICSEARCH_INDEX: audio_files-metadata
+      MONGO_CLIENT_STRING: mongodb://mongodb:27017
+      MONGO_DB: podcast_files
+      MONGO_COLLECTION: audio_files
+      ELASTICSEARCH_MAPPING_PATH: config/elasticsearch_mapping.json
+    depends_on: 
+      - elasticsearch
+      - kafka
+      - mongodb
+
+

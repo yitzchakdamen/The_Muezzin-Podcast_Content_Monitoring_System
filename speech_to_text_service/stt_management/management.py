@@ -36,13 +36,14 @@ class Management:
             logger.debug(f"message from Kafka: {message}")
             self.message_reception_processing(message.value)
     
+    @safe_execute()
     def message_reception_processing(self, message):
         file_id = message["file_id"]
         bytes_file = self.retrieve_from_mongo(file_id)
         transcribe = self.transcription(io.BytesIO(bytes_file))
-        # Insert into Elastic
+        self.dal_elasticsearch.index_document(index_name=self.index_name, document= {"file_id":file_id, "transcribe":transcribe})
+        logging.info(f"file with id: {file_id} transcribed and indexed into elasticsearch")
 
-        
     def retrieve_from_mongo(self, file_id) -> bytes:
         find = self.dal_mongo.find_file(collection_name=self.collection_name, field_name="file_id", find=file_id)
         if find: return self.dal_mongo.get_file(collection_name=self.collection_name, id=find._id).read()

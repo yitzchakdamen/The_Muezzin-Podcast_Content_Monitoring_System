@@ -3,7 +3,7 @@
     {
         "properties":
             {
-                "name":{ "type": "keyword" },
+                "name":{ "type": "Text" },
                 "stem":{ "type": "keyword" },
                 "suffix":{ "type": "keyword" },
                 "file_id": { "type": "keyword" },
