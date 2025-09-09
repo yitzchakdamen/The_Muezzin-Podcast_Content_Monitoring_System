@@ -8,7 +8,6 @@ logger = logging.getLogger(LOGGER_NAME)
 class FileManager:
     
     @staticmethod
-    @safe_execute()
     def uploading_content(file_url: str):
         if file_url.endswith('.csv'):
             return FileManager.uploading_csv_file_as_dict(file_url)

@@ -27,7 +27,6 @@ class FileMetadataProcessing:
         metadata["statistics"] = self.file_statistics(file=file)
         return metadata
     
-    @log_func
     def file_metadata(self, file: Path) -> dict:
         """ extracting file metadata  """
         if not file.is_file(): raise TypeError("The Path is not a file")
@@ -39,7 +38,6 @@ class FileMetadataProcessing:
             "suffix": file.suffix
         }
     
-    @log_func
     def file_statistics(self, file: Path) -> dict:
         """ extracting file statistics  """
         if not file.is_file(): raise TypeError("The Path is not a file")

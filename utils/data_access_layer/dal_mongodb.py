@@ -21,7 +21,7 @@ class MongoDal:
             logger.info("DataLoader object created.")
         return cls._instance
 
-    @safe_execute()
+
     def __init__(self, client_string: str, database: str):
         if MongoDal._initialized: return
         self.client: MongoClient = MongoClient(client_string)

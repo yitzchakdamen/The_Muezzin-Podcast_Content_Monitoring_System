@@ -7,7 +7,8 @@ from utils.data_access_layer.dal_mongodb import MongoDal
 from utils.data_access_layer.dal_elasticsearch import ElasticSearchDal
 from config.config import LOGGER_NAME
 
-
+logging.getLogger('kafka').setLevel(logging.WARNING)
+logging.getLogger('elastic_transport.transport').setLevel(logging.WARNING)
 logger = logging.getLogger(LOGGER_NAME)
 
 BOOTSTRAP_SERVERS = config.BOOTSTRAP_SERVERS
@@ -26,7 +27,6 @@ MONGO_COLLECTION = config.MONGO_COLLECTION
 def main():
     
     logging.basicConfig(level=logging.INFO, handlers=LoggerConfig.config_ESHandler(es_host=ELASTICSEARCH_HOST, index=ELASTICSEARCH_INDEX_LOG))
-    logging.getLogger('kafka').setLevel(logging.WARNING)
     
     logger.info(" ____ Starting the application ____ ")
     

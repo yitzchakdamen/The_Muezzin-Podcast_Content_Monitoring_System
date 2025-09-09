@@ -31,7 +31,7 @@ MONGO_COLLECTION = os.getenv("MONGO_COLLECTION", "audio_files")
 
 
 
-logger.debug(f"""
+logger.info(f"""
             Configuration Loaded ___ :
             PODCAST_FILES_PATH:( {PODCAST_FILES_PATH})
             BOOTSTRAP_SERVERS: ({BOOTSTRAP_SERVERS})
