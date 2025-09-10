@@ -6,6 +6,9 @@ from config.config import LOGGER_NAME
 logger = logging.getLogger(LOGGER_NAME)
 
 class FileManager:
+    """
+    File upload handling
+    """
     
     @staticmethod
     def uploading_content(file_url: str):

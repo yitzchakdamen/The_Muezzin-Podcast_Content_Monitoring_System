@@ -9,6 +9,12 @@ from config.config import LOGGER_NAME
 logger = logging.getLogger(LOGGER_NAME)
 
 class FileMetadataProcessing:
+    """
+    creating metadata for files
+    Gets a folder path.
+    Contains methods for creating metadata about a file in a folder
+    And a method that runs the process on all files in the folder
+    """
     
     def __init__(self, folder_files_path:str) -> None:
         self.folder = Path(folder_files_path)

@@ -1,5 +1,5 @@
 from elastic_transport import ObjectApiResponse
-from utils.kafka_tools.kafka_tools import KafkaTools, KafkaConsumer, KafkaProducer
+from utils.kafka_tools.kafka_tools import KafkaTools, KafkaConsumer
 from utils.data_access_layer.dal_elasticsearch import ElasticSearchDal
 from utils.data_access_layer.file_manager import FileManager
 from utils.data_access_layer.dal_mongodb import MongoDal
@@ -11,6 +11,14 @@ from config.config import LOGGER_NAME
 logger = logging.getLogger(LOGGER_NAME)
 
 class Management:
+    
+    """
+    Service Management:
+    Contains the consumer loop function. 
+    Processing each message. 
+    Database input functions.
+    And Creating a unique ID
+    """
     
     def __init__(self, 
                 dal_elasticsearch: ElasticSearchDal,
@@ -42,7 +50,8 @@ class Management:
         """ 
         Processing on message:
             Create a unique ID
-            Insert metadata and file into databases - Mongo and Elastic And publish in Kafka
+            Insert metadata and file into databases - Mongo and Elastic
+            publish in Kafka
         """
         has_identifier = self.create_unique_hash_identifier(message)
         path: str = self.path_processing(message)

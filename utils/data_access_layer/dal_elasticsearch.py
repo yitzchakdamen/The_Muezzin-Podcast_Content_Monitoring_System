@@ -7,6 +7,10 @@ from config.config import LOGGER_NAME
 logger = logging.getLogger(LOGGER_NAME)
 
 class ElasticSearchDal:
+    """
+    Singleton class To verify a single connection with ElasticSearch
+    data access layer for Elastic
+    """
     
     _instance = None
     _initialized = False
@@ -42,7 +46,7 @@ class ElasticSearchDal:
 
     @log_func
     def index_document(self, index_name: str, document: dict, id=None):
-        check = self.es.index(index=index_name, document=document, id=id)
+        check = self.es.index(index=index_name, document=document, id=id, refresh=True)
         logger.info(f"Document indexed in '{check.body['_index']}'  id: {check.body['_id']}, -> {check.body['result']}")
         return check
 
@@ -55,32 +59,6 @@ class ElasticSearchDal:
         return self.es.search(index=index_name, query=query)
 
     @log_func
-    def update_document(self, index_name:str, document:dict, id=None, query=None):
-        if query: return self.es.update_by_query(index=index_name, body={"query": query})
-        elif id is not None: return self.es.update(index=index_name,id=id,doc=document)
+    def update_document(self, index_name:str, document:dict, id, query=None):
+        return self.es.update(index=index_name,id=id,doc=document)
 
-    @log_func
-    def delete_document(self, index_name:str, id=None, query=None):
-        if not self.es.indices.exists(index=index_name):
-            logger.warning(f"Index '{index_name}' does not exist.")
-            return False
-        
-        if query: return self.es.delete_by_query(index=index_name, body={"query": query})
-        elif id is not None: return self.es.delete(index=index_name , id=id)
-
-    @log_func
-    def index_many(self, index_name: str, documents:list[dict]):
-        helpers.bulk(client=self.es, actions=[{"_index": index_name, "_source": doc} for doc in documents], refresh="wait_for")
-
-    @log_func
-    def update_many(self, documents:list[dict]):
-        helpers.bulk(client=self.es, actions=[{"_op_type": "update", "_index": doc['_index'],"_id": doc["_id"], "doc": doc['_source']} for doc in documents], refresh="wait_for")
-
-    @log_func
-    def delete_many(self, documents:list[dict]):
-        helpers.bulk(client=self.es, actions=[{"_op_type": "delete", "_index": doc['_index'],"_id": doc["_id"], "doc": doc['_source']} for doc in documents], refresh="wait_for")
-
-    @log_func
-    def scan(self, index_name: str, query):
-        return helpers.scan(self.es, index=index_name, query={"query": query})
-    

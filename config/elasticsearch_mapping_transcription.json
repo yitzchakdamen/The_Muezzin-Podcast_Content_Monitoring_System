@@ -1,0 +1,13 @@
+{
+    "mappings":
+    {
+        "properties":
+            {
+                "file_id":{ "type": "keyword" },
+                "transcribe":{ "type": "text" },
+                "bds_percent":{ "type": "integer" },
+                "is_bds":{ "type": "keyword" },
+                "bds_threat_level":{ "type": "keyword" }
+            }
+    }
+}
