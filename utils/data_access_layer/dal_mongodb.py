@@ -12,6 +12,11 @@ logger = logging.getLogger(LOGGER_NAME)
 
 class MongoDal:
     
+    """
+    Singleton class To verify a single connection with Mongo
+    data access layer for Mongo
+    """
+    
     _instance = None
     _initialized = False
 
@@ -33,55 +38,23 @@ class MongoDal:
         self.db: Database = self.client[database]
 
     @safe_execute(return_strategy="error")
-    def retrieve(self, collection_name: str, query: dict = {}, exclude_id: bool = True,  to_list: bool = False) -> Cursor|list[dict]:
-        projection = {'_id': 0} if exclude_id else None
-        cursor = self.db[collection_name].find(query, projection)
-        return list(cursor) if to_list else cursor
-
-    @safe_execute(return_strategy="error")
     def insert(self, documents: dict, collection_name: str) -> dict:
         result = self.db[collection_name].insert_one(documents)
         return {"acknowledged": result.acknowledged, "inserted_id": result.inserted_id}
     
     @safe_execute(return_strategy="error")
     def insert_file(self,  collection_name: str,file_id:str, file) -> dict:
+        """Using GridFS for efficient storage in Mongo"""
         fs = GridFS(database=self.db, collection=collection_name)
         return fs.put(file,  content_type=file, file_id=file_id)
     
     def get_file(self, collection_name: str, id) -> GridOut:
+        """ For files we stored via GridFS """
         fs = GridFS(database=self.db, collection=collection_name)
         return fs.get(id)
     
     def find_file(self, collection_name: str, field_name:str, find) -> GridOut | None:
+        """ For files we stored via GridFS """
         fs = GridFS(database=self.db, collection=collection_name)
         return fs.find_one({field_name:find})
 
-    @safe_execute(return_strategy="error")
-    def insert_many(self, documents: list[dict], collection_name: str) -> dict:
-        result = self.db[collection_name].insert_many(documents)
-        return {"acknowledged": result.acknowledged, "inserted_ids": result.inserted_ids}
-
-    @safe_execute(return_strategy="error")
-    def update(self, query: dict, update: dict, collection_name: str) -> dict:
-        result = self.db[collection_name].update_one(filter=query, update=update)
-        return {"acknowledged": result.acknowledged, "modified_count": result.modified_count}
-
-    @safe_execute(return_strategy="error")
-    def update_many(self, query: dict, update: dict, collection_name: str) -> dict:
-        result = self.db[collection_name].update_many(filter=query, update=update)
-        return {"acknowledged": result.acknowledged, "modified_count": result.modified_count}
-
-    @safe_execute(return_strategy="error")
-    def delete(self, query: dict, collection_name: str) -> dict:
-        result = self.db[collection_name].delete_one(query)
-        return {"acknowledged": result.acknowledged, "deleted_count": result.deleted_count}
-
-    @safe_execute(return_strategy="error")
-    def delete_many(self, query: dict, collection_name: str) -> dict:
-        result = self.db[collection_name].delete_many(filter=query)
-        return {"acknowledged": result.acknowledged, "deleted_count": result.deleted_count}
-
-    @safe_execute(return_strategy="error")
-    def retrieve_aggregate(self, collection_name: str, pipeline: list[dict], to_list: bool = False) -> list[dict] | CommandCursor:
-        cursor = self.db[collection_name].aggregate(pipeline)
-        return list(cursor) if to_list else cursor

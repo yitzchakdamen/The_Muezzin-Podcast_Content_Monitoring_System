@@ -8,6 +8,13 @@ from utils.decorators import log_func
 logger = logging.getLogger(LOGGER_NAME)
 
 class Management:
+    """
+    Initializes the objects required for management and speeds up management 
+    poducer: 
+        Posting about new file metadata
+    file_metadata_processing:
+        Class for creating metadata for files
+    """
     
     def __init__(self, file_metadata_processing: FileMetadataProcessing, poducer:KafkaTools.Producer) -> None:
         self.file_metadata_processing = file_metadata_processing

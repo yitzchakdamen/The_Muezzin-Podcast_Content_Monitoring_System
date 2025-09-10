@@ -18,6 +18,13 @@ ELASTICSEARCH_INDEX_LOG = config.ELASTICSEARCH_INDEX_LOG
 
 
 def main():
+    """
+    Initializes the objects required for management and speeds up management on
+    poducer: 
+        Posting a message about file metadata information
+    file_metadata_processing:
+        Management for generating metadata on files
+    """
     
     logging.basicConfig(level=logging.INFO, handlers=LoggerConfig.config_ESHandler(es_host=ELASTICSEARCH_HOST, index=ELASTICSEARCH_INDEX_LOG))
     logger.info(" ____ Starting the application ____ ")

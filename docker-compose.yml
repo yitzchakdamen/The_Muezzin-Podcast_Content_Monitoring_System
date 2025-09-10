@@ -20,7 +20,6 @@ services:
       - "9092:9092"
       - "9093:9093"
 
-
   kafdrop:
     image: obsidiandynamics/kafdrop:latest
     container_name: kafdrop
@@ -57,29 +56,6 @@ services:
     ports:
       - "27017:27017"
 
-  storage_service:
-    build: 
-      context: .
-      dockerfile: storage_service/Dockerfile
-    image: storage_service-image
-    container_name: storage_service-container
-    environment:
-      LOGGER_NAME: storage_service
-      PODCAST_FILES_PATH: data/podcasts
-      BOOTSTRAP_SERVERS: kafka-broker:9092
-      KAFKA_TOPIC_FILE_METADATA: file-metadata
-      KAFKA_GROUP_ID_FILE_METADATA: information_consumption_processing
-      ELASTICSEARCH_HOST: http://elasticsearch:9200
-      ELASTICSEARCH_INDEX: audio_files-metadata
-      MONGO_CLIENT_STRING: mongodb://mongodb:27017
-      MONGO_DB: podcast_files
-      MONGO_COLLECTION: audio_files
-      ELASTICSEARCH_MAPPING_PATH: config/elasticsearch_mapping.json
-    depends_on: 
-      - elasticsearch
-      - kafka
-      - mongodb
-
   processing_metadata_service:
     build: 
       context: .
@@ -98,11 +74,35 @@ services:
       MONGO_DB: podcast_files
       MONGO_COLLECTION: audio_files
       ELASTICSEARCH_MAPPING_PATH: config/elasticsearch_mapping.json
+      ELASTICSEARCH_MAPPING_TRANSCRIPTTION : config/elasticsearch_mapping_transcription.json
     depends_on: 
       - elasticsearch
       - kafka
       - mongodb
 
+  storage_service:
+    build: 
+      context: .
+      dockerfile: storage_service/Dockerfile
+    image: storage_service-image
+    container_name: storage_service-container
+    environment:
+      LOGGER_NAME: storage_service
+      PODCAST_FILES_PATH: data/podcasts
+      BOOTSTRAP_SERVERS: kafka-broker:9092
+      KAFKA_TOPIC_FILE_METADATA: file-metadata
+      KAFKA_GROUP_ID_FILE_METADATA: information_consumption_processing
+      ELASTICSEARCH_HOST: http://elasticsearch:9200
+      ELASTICSEARCH_INDEX: audio_files-metadata
+      MONGO_CLIENT_STRING: mongodb://mongodb:27017
+      MONGO_DB: podcast_files
+      MONGO_COLLECTION: audio_files
+      ELASTICSEARCH_MAPPING_PATH: config/elasticsearch_mapping.json
+      ELASTICSEARCH_MAPPING_TRANSCRIPTTION : config/elasticsearch_mapping_transcription.json
+    depends_on: 
+      - elasticsearch
+      - kafka
+      - mongodb
 
   speech_to_text_service:
     build: 
@@ -122,9 +122,29 @@ services:
       MONGO_DB: podcast_files
       MONGO_COLLECTION: audio_files
       ELASTICSEARCH_MAPPING_PATH: config/elasticsearch_mapping.json
+      ELASTICSEARCH_MAPPING_TRANSCRIPTTION : config/elasticsearch_mapping_transcription.json
     depends_on: 
       - elasticsearch
       - kafka
       - mongodb
 
-
+  text_analysis_service:
+    build: 
+      context: .
+      dockerfile: text_analysis_service/Dockerfile
+    image: text_analysis_service-image
+    container_name: text_analysis_service-container
+    environment:
+      LOGGER_NAME: text_analysis_service
+      PODCAST_FILES_PATH: data/podcasts
+      BOOTSTRAP_SERVERS: kafka-broker:9092
+      KAFKA_TOPIC_FILE_METADATA: file-metadata
+      KAFKA_GROUP_ID_FILE_METADATA: information_consumption_processing
+      ELASTICSEARCH_HOST: http://elasticsearch:9200
+      ELASTICSEARCH_INDEX: audio_files-metadata
+      ELASTICSEARCH_MAPPING_PATH: config/elasticsearch_mapping.json
+      ELASTICSEARCH_MAPPING_TRANSCRIPTTION : config/elasticsearch_mapping_transcription.json
+    depends_on: 
+      - elasticsearch
+      - kafka
+      - mongodb

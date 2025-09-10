@@ -2,7 +2,6 @@ from kafka import KafkaConsumer, KafkaProducer
 import json
 import logging
 from typing import Any
-import datetime
 from utils.decorators import safe_execute, log_func
 from config.config import LOGGER_NAME
 
@@ -10,8 +9,17 @@ from config.config import LOGGER_NAME
 logger = logging.getLogger(LOGGER_NAME)
 
 class KafkaTools:
+    """
+    Tools for connecting to Kafka
+    Contains a Producer class with a publish function
+    and a Consumer class
+    """
     
     class Producer:
+        """
+        Singleton class
+        To verify a single connection with Kafka
+        """
         
         _instance = None
         _initialized = False
@@ -36,17 +44,6 @@ class KafkaTools:
             """Publish a message to a Kafka topic."""
             self.producer.send(topic, key=key, value=message)
             self.producer.flush()
-        
-        @safe_execute(return_strategy="error")
-        def publish_many_by_topics(self, topics:dict[str,Any]):
-            """Publish data to Kafka."""
-            logger.info("Publishing data to Kafka ..")
-            
-            for topic, messages in topics.items():
-                for message in messages:
-                    self.publish_message(topic=topic, key=None, message=message)
-                    logger.info(f"Published message: {str(message)} to topic: {str(topic)}")
-                self.producer.flush()
     
     class Consumer:
         
@@ -62,18 +59,3 @@ class KafkaTools:
                 bootstrap_servers=[bootstrap_servers],
                 auto_offset_reset='earliest'
             )
-            
-            
-            
-if __name__ == "__main__":
-    producer = KafkaTools.Producer(bootstrap_servers="localhost:9092")
-    producer.publish_message(topic="test", message={"message_1": "Hello World!"})
-    producer.publish_many_by_topics({"test": [{"message_3": "Hello World!"}, {"message_2": "Hello World!"}]})
-    
-    consumer = KafkaTools.Consumer.get_consumer("test", bootstrap_servers="localhost:9092", group_id="test")
-
-    for message in consumer:
-        print("topic: ", message.topic)
-        print("message: " , message.value)
-        print("timestamp: ", datetime.datetime.fromtimestamp(message.timestamp / 1000))
-        
