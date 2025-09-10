@@ -1,7 +1,5 @@
 from pymongo import MongoClient
 from gridfs import GridFS, GridOut
-from pymongo.cursor import Cursor
-from pymongo.command_cursor import CommandCursor
 from pymongo.database import Database
 from utils.decorators import safe_execute, log_func
 import logging

@@ -41,7 +41,9 @@ HIGH_DANGER_LEVEL = float(os.getenv("HIGH_DANGER_LEVEL",10))
 MEDIUM_DANGER_LEVEL = float(os.getenv("MEDIUM_DANGER_LEVEL",5))
 THRESHOLD = float(os.getenv("THRESHOLD",7.5))
 
-
+# ___ API_ENDPOINT_SERVICE Configuration ___
+APP_HOST = os.getenv("APP_HOST", "localhost")
+APP_PORT = int(os.getenv("APP_PORT", 8000))
 
 logger.info(f"""
             Configuration Loaded ___ :
@@ -67,4 +69,6 @@ logger.info(f"""
             HIGH_DANGER_LEVEL: {HIGH_DANGER_LEVEL}
             MEDIUM_DANGER_LEVEL: {MEDIUM_DANGER_LEVEL}
             THRESHOLD: {THRESHOLD}
+            APP_HOST: {APP_HOST}
+            APP_PORT: {APP_PORT}
             """)

@@ -74,6 +74,11 @@ class Management:
         else: raise ValueError("file not find")
         
     def transcription(self, audio_stream: BinaryIO) -> str:
+        """
+        Audio to text transcription.
+        Faster whisper library with base model selected.
+        You can change the model for more efficient execution or accuracy.
+        """
         segments, info = self.model.transcribe(audio_stream, language='en')
         return "".join([segment.text for segment in segments ])
 

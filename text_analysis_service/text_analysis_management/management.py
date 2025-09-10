@@ -1,11 +1,10 @@
-from utils.kafka_tools.kafka_tools import KafkaTools, KafkaConsumer
+from utils.kafka_tools.kafka_tools import KafkaConsumer
 from utils.data_access_layer.dal_elasticsearch import ElasticSearchDal
 from text_analysis_service.text_analysis_management.text_analysis import TextAnalysis
 import logging
 from utils.decorators import log_func, safe_execute
 from config.config import LOGGER_NAME
-from typing import BinaryIO
-from faster_whisper import WhisperModel
+
 
 
 logger = logging.getLogger(LOGGER_NAME)
@@ -49,7 +48,7 @@ class Management:
         """
         file_id:str = message["file_id"]
         text, id = self.get_file_from_elasticsearch(file_id=file_id) 
-        analysis = self.text_analysis.snalysis_process(text)
+        analysis = self.text_analysis.analysis_process(text)
         self.dal_elasticsearch.update_document(index_name=self.index_name, document=analysis, id=id)
         # logging.info(f"file with id: {file_id}  and indexed into elasticsearch")
         
