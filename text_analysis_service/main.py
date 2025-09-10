@@ -4,7 +4,6 @@ import logging
 from text_analysis_service.text_analysis_management.management import Management
 from text_analysis_service.text_analysis_management.text_analysis import TextAnalysis
 from utils.kafka_tools.kafka_tools import KafkaTools
-from utils.data_access_layer.dal_mongodb import MongoDal
 from utils.data_access_layer.dal_elasticsearch import ElasticSearchDal
 from config.config import LOGGER_NAME
 

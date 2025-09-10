@@ -3,3 +3,5 @@ pymongo
 elasticsearch
 ecs-logging
 faster_whisper
+fastapi
+uvicorn

@@ -1,4 +1,4 @@
-from elasticsearch import Elasticsearch, helpers
+from elasticsearch import Elasticsearch
 import logging
 from utils.decorators import safe_execute, log_func
 from config.config import LOGGER_NAME
