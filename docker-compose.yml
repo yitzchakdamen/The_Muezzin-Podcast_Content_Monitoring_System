@@ -152,19 +152,20 @@ services:
   api_endpoint_service:
     build: 
       context: .
-      dockerfile: text_analysis_service/Dockerfile
-    image: text_analysis_service-image
-    container_name: text_analysis_service-container
+      dockerfile: api_endpoint_service/Dockerfile
+    image: api_endpoint_service-image
+    container_name: api_endpoint_service-container
     environment:
-      LOGGER_NAME: text_analysis_service
+      LOGGER_NAME: api_endpoint_service
       PODCAST_FILES_PATH: data/podcasts
-      BOOTSTRAP_SERVERS: kafka-broker:9092
-      KAFKA_TOPIC_FILE_METADATA: file-metadata
-      KAFKA_GROUP_ID_FILE_METADATA: information_consumption_processing
       ELASTICSEARCH_HOST: http://elasticsearch:9200
       ELASTICSEARCH_INDEX: audio_files-metadata
       ELASTICSEARCH_MAPPING_PATH: config/elasticsearch_mapping.json
       ELASTICSEARCH_MAPPING_TRANSCRIPTTION_PATH: config/elasticsearch_mapping_transcription.json
+      APP_HOST: 0.0.0.0
+      APP_PORT: 8000
+    ports:
+      - "8000:8000"
     depends_on: 
       - elasticsearch
       - kafka

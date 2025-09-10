@@ -23,6 +23,7 @@ app = FastAPI()
 
 @app.get("/api/documents-danger-level/{level_gte}/{level_lte}")
 async def get_antisemitic_documents(level_gte: float, level_lte: float):
+    """ API to get documents with a danger level within the range specified."""
     query = {"range": {"bds_percent": {"gte":level_gte, "lte": level_lte}}}
     search = dal_elasticsearch.search_document(index_name=ELASTICSEARCH_INDEX_TRANSCRIPTTION, query=query)
     return [document['_source'] for document in search['hits']['hits']]
